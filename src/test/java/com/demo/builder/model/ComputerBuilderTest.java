@@ -40,6 +40,15 @@ class ComputerBuilderTest {
     }
 
     @Test
+    void rejectsExplicitlyBlankOptionalValues() {
+        Computer.Builder builder = new Computer.Builder("Intel i7", 16, 1024);
+        assertThrows(IllegalArgumentException.class, () -> builder.gpu(" "));
+        assertThrows(IllegalArgumentException.class, () -> builder.os(null));
+        assertThrows(IllegalArgumentException.class, () -> builder.color(""));
+        assertEquals("Integrated", builder.build().getGpu());
+    }
+
+    @Test
     void builtObjectIsUnchangedWhenBuilderIsReused() {
         Computer.Builder builder = new Computer.Builder("Intel", 16, 512).gpu("Integrated");
         Computer original = builder.build();
