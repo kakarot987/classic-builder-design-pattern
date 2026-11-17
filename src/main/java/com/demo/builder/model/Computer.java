@@ -91,11 +91,18 @@ public class Computer {
         }
 
         // ── Optional field setters – each returns `this` for chaining ───
-        public Builder gpu(String gpu)              { this.gpu = gpu;           return this; }
+        public Builder gpu(String gpu)              { this.gpu = requireText(gpu, "GPU"); return this; }
         public Builder bluetooth(boolean val)       { this.hasBluetooth = val;  return this; }
         public Builder wifi(boolean val)            { this.hasWifi = val;       return this; }
-        public Builder os(String os)                { this.os = os;             return this; }
-        public Builder color(String color)          { this.color = color;       return this; }
+        public Builder os(String os)                { this.os = requireText(os, "OS"); return this; }
+        public Builder color(String color)          { this.color = requireText(color, "Color"); return this; }
+
+        private static String requireText(String value, String field) {
+            if (value == null || value.isBlank()) {
+                throw new IllegalArgumentException(field + " must not be blank");
+            }
+            return value.trim();
+        }
 
         /**
          * Terminal method – validates & constructs the final Computer object.
